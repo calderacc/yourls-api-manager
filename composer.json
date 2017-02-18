@@ -1,0 +1,14 @@
+{
+    "name": "calderacc/yours-api-manager",
+    "license": "mit",
+    "type": "package",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "curl/curl": "^1.6"
+    }
+}
