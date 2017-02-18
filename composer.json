@@ -1,6 +1,6 @@
 {
-    "name": "calderacc/yours-api-manager",
     "license": "mit",
+    "name": "calderacc/yourls-api-manager",
     "type": "package",
     "autoload": {
         "psr-4": {
