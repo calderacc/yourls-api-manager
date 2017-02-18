@@ -2,6 +2,12 @@
     "name": "calderacc/yourls-api-manager",
     "type": "package",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Malte Hübner",
+            "email": "malte@caldera.cc"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Caldera\\YourlsApiManager\\": "src/"
