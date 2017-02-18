@@ -4,7 +4,7 @@
     "type": "package",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "Caldera\\YourlsApiManager": "src/"
         }
     },
     "require": {
