@@ -1,7 +1,7 @@
 {
-    "license": "mit",
     "name": "calderacc/yourls-api-manager",
     "type": "package",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Caldera\\YourlsApiManager\\": "src/"
