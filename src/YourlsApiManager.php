@@ -1,41 +1,32 @@
 <?php
 
-namespace AppBundle\PermalinkManager;
+namespace Caldera\YourlsApiManager;
 
-use AppBundle\Entity\Incident;
 use Curl\Curl;
-use stdClass;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class YourlsApiManager
 {
-    /** @var Router $router */
-    private $router;
-
     /** @var string $apiUrl */
-    private $apiUrl;
+    protected $apiUrl;
 
     /** @var string $apiUsername */
-    private $apiUsername;
+    protected $apiUsername;
 
     /** @var string $apiPassword */
-    private $apiPassword;
+    protected $apiPassword;
 
-    public function __construct(Router $router, string $apiUrl, string $apiUsername, string $apiPassword)
+    public function __construct(string $apiUrl, string $apiUsername, string $apiPassword)
     {
-        $this->router = $router;
-
         $this->apiUrl = $apiUrl;
         $this->apiUsername = $apiUsername;
         $this->apiPassword = $apiPassword;
     }
 
-    public function createPermalink(Incident $incident): string
+    public function createPermalink(string $url, string $title): ?string
     {
         $data = [
-            'url' => $this->generateUrl($incident),
-            'title' => $incident->getTitle(),
+            'url' => $url,
+            'title' => $title,
             'format'   => 'json',
             'action'   => 'shorturl'
         ];
@@ -43,19 +34,18 @@ class YourlsApiManager
         $response = $this->postCurl($data);
 
         if (!isset($response->shorturl)) {
-            return '';
+            return null;
         }
 
         $permalink = $response->shorturl;
-        $incident->setPermalink($permalink);
 
         return $permalink;
     }
 
-    public function getUrl(Incident $incident): string
+    public function getUrl(string $keyword): ?string
     {
         $data = [
-            'shorturl' => $this->getKeyword($incident),
+            'shorturl' => $keyword,
             'format'   => 'json',
             'action'   => 'expand'
         ];
@@ -63,7 +53,7 @@ class YourlsApiManager
         $response = $this->postCurl($data);
 
         if (isset($response->errorCode) && $response->errorCode == 404) {
-            return '';
+            return null;
         }
 
         $longUrl = $response->longurl;
@@ -71,13 +61,11 @@ class YourlsApiManager
         return $longUrl;
     }
 
-    public function updatePermalink(Incident $incident): bool
+    public function updatePermalink(string $keyword, string $url): bool
     {
-        $url = $this->generateUrl($incident);
-
         $data = [
             'url' => $url,
-            'shorturl' => $this->getKeyword($incident),
+            'shorturl' => $keyword,
             'format'   => 'json',
             'action'   => 'update'
         ];
@@ -91,30 +79,7 @@ class YourlsApiManager
         return false;
     }
 
-    protected function getKeyword(Incident $incident): string
-    {
-        $permalinkParts = explode('/', $incident->getPermalink());
-        $keyword = array_pop($permalinkParts);
-
-        return $keyword;
-    }
-
-    protected function generateUrl(Incident $incident): string
-    {
-        $url = $this->router->generate(
-            'caldera_cycleways_incident_show',
-            [
-                'slug' => $incident->getSlug()
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        $url = str_replace('http://', 'https://', $url);
-
-        return $url;
-    }
-
-    protected function postCurl(array $data): stdClass
+    protected function postCurl(array $data): ?\stdClass
     {
         $loginArray = [
             'username' => $this->apiUsername,
@@ -129,6 +94,10 @@ class YourlsApiManager
             $data
         );
 
-        return $curl->response;
+        if ($curl->response) {
+            return $curl->response;
+        }
+
+        return null;
     }
 }
