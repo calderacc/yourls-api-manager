@@ -101,9 +101,7 @@ class YourlsApiManager
             $this->apiUrl,
             $request->__toArray()
         );
-
-        var_dump($curl->response);
-
+        
         return $this->createResponse($curl->response, get_class($request));
     }
 
