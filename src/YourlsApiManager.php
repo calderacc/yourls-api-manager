@@ -32,7 +32,7 @@ class YourlsApiManager
         $this->apiPassword = $apiPassword;
     }
 
-    public function createPermalink(string $url, string $title): ?string
+    public function createShorturl(string $url, string $title): ?string
     {
         /** @var CreateShorturlRequest $request */
         $request = $this->createRequest(CreateShorturlRequest::class);
@@ -48,7 +48,7 @@ class YourlsApiManager
         return $response->getKeyword();
     }
 
-    public function getUrl(string $keyword): ?string
+    public function getShorturl(string $keyword): ?string
     {
         /** @var ExpandShorturlRequest $request */
         $request = $this->createRequest(ExpandShorturlRequest::class);
@@ -61,7 +61,7 @@ class YourlsApiManager
         return $response->getLongurl();
     }
 
-    public function deleteUrl(string $keyword): bool
+    public function deleteShorturl(string $keyword): bool
     {
         /** @var DeleteShorturlRequest $request */
         $request = $this->createRequest(DeleteShorturlRequest::class);
@@ -74,7 +74,7 @@ class YourlsApiManager
         return $response->isSuccess();
     }
 
-    public function updatePermalink(string $keyword, string $url, string $title = null): bool
+    public function updateShorturl(string $keyword, string $url, string $title = null): bool
     {
         /** @var UpdateShorturlRequest $request */
         $request = $this->createRequest(UpdateShorturlRequest::class);
