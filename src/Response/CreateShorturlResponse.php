@@ -13,4 +13,9 @@ class CreateShorturlResponse extends AbstractResponse
     {
         return $this->responseData['title'];
     }
+
+    public function getKeyword(): ?string
+    {
+        return $this->responseData['url']->keyword;
+    }
 }

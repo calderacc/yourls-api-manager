@@ -9,6 +9,7 @@ use Caldera\YourlsApiManager\Request\RequestInterface;
 use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
 use Caldera\YourlsApiManager\Response\CreateShorturlResponse;
 use Caldera\YourlsApiManager\Response\ResponseInterface;
+use Caldera\YourlsApiManager\Response\UpdateShorturlResponse;
 use Curl\Curl;
 
 class YourlsApiManager
@@ -42,7 +43,7 @@ class YourlsApiManager
         /** @var CreateShorturlResponse $response */
         $response = $this->post($request);
 
-        return $response->getShorturl();
+        return $response->getKeyword();
     }
 
     public function getUrl(string $keyword): ?string
@@ -93,13 +94,10 @@ class YourlsApiManager
             $request->setTitle($title);
         }
 
+        /** @var UpdateShorturlResponse $response */
         $response = $this->post($request);
 
-        if (isset($response->statusCode) && $response->statusCode == 200) {
-            return true;
-        }
-
-        return false;
+        return $response->isSuccess();
     }
 
     protected function post(RequestInterface $request): ResponseInterface
@@ -109,6 +107,8 @@ class YourlsApiManager
             $this->apiUrl,
             $request->__toArray()
         );
+
+        var_dump($curl->response);
 
         return $this->createResponse($curl->response, get_class($request));
     }
