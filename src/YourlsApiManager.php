@@ -2,6 +2,8 @@
 
 namespace Caldera\YourlsApiManager;
 
+use Caldera\YourlsApiManager\Request\CreateShorturlRequest;
+use Caldera\YourlsApiManager\Request\RequestInterface;
 use Curl\Curl;
 
 class YourlsApiManager
@@ -24,14 +26,15 @@ class YourlsApiManager
 
     public function createPermalink(string $url, string $title): ?string
     {
-        $data = [
-            'url' => $url,
-            'title' => $title,
-            'format'   => 'json',
-            'action'   => 'shorturl'
-        ];
+        /** @var CreateShorturlRequest $request */
+        $request = $this->createRequest(CreateShorturlRequest::class);
 
-        $response = $this->postCurl($data);
+        $request
+            ->setUrl($url)
+            ->setTitle($title)
+        ;
+
+        $response = $this->post($request);
 
         if (!isset($response->shorturl)) {
             return null;
@@ -79,25 +82,25 @@ class YourlsApiManager
         return false;
     }
 
-    protected function postCurl(array $data): ?\stdClass
+    protected function post(RequestInterface $request): string
     {
-        $loginArray = [
-            'username' => $this->apiUsername,
-            'password' => $this->apiPassword
-        ];
-
-        $data = array_merge($data, $loginArray);
-
         $curl = new Curl();
         $curl->post(
             $this->apiUrl,
-            $data
+            (array) $request
         );
+
+        var_dump($curl->response);
 
         if ($curl->response) {
             return $curl->response;
         }
 
         return null;
+    }
+
+    protected function createRequest(string $requestClassname): RequestInterface
+    {
+        return new $requestClassname($this->apiUsername, $this->apiPassword);
     }
 }
