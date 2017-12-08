@@ -2,6 +2,15 @@
 
 namespace Caldera\YourlsApiManager\Request;
 
+/**
+ * Class ExpandShorturlRequest
+ *
+ * This action requires the plugin yourls-api-edit-url
+ *
+ * @see https://github.com/timcrockford/yourls-api-edit-url
+ *
+ * @package Caldera\YourlsApiManager\Request
+ */
 class ExpandShorturlRequest extends AbstractRequest
 {
     public function __construct(string $username, string $password)
