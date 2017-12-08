@@ -3,6 +3,7 @@
 namespace Caldera\YourlsApiManager;
 
 use Caldera\YourlsApiManager\Request\CreateShorturlRequest;
+use Caldera\YourlsApiManager\Request\ExpandShorturlRequest;
 use Caldera\YourlsApiManager\Request\RequestInterface;
 use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
 use Curl\Curl;
@@ -48,13 +49,20 @@ class YourlsApiManager
 
     public function getUrl(string $keyword): ?string
     {
-        $data = [
-            'shorturl' => $keyword,
-            'format'   => 'json',
-            'action'   => 'expand'
-        ];
+        /** @var ExpandShorturlRequest $request */
+        $request = $this->createRequest(ExpandShorturlRequest::class);
 
-        $response = $this->postCurl($data);
+        $request->setKeyword($keyword);
+
+        $response = $this->post($request);
+
+        if (isset($response->errorCode) && $response->errorCode == 404) {
+            return null;
+        }
+
+        $longUrl = $response->longurl;
+
+        return $longUrl;
 
         if (isset($response->errorCode) && $response->errorCode == 404) {
             return null;
