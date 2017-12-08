@@ -82,15 +82,13 @@ class YourlsApiManager
         return false;
     }
 
-    protected function post(RequestInterface $request): string
+    protected function post(RequestInterface $request): \stdClass
     {
         $curl = new Curl();
         $curl->post(
             $this->apiUrl,
-            (array) $request
+            $request->__toArray()
         );
-
-        var_dump($curl->response);
 
         if ($curl->response) {
             return $curl->response;

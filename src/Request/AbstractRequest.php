@@ -18,4 +18,9 @@ abstract class AbstractRequest implements RequestInterface
     {
         return http_build_query($this->requestData);
     }
+
+    public function __toArray(): array
+    {
+        return $this->requestData;
+    }
 }
