@@ -4,6 +4,7 @@ namespace Caldera\YourlsApiManager;
 
 use Caldera\YourlsApiManager\Request\CreateShorturlRequest;
 use Caldera\YourlsApiManager\Request\RequestInterface;
+use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
 use Curl\Curl;
 
 class YourlsApiManager
@@ -64,16 +65,21 @@ class YourlsApiManager
         return $longUrl;
     }
 
-    public function updatePermalink(string $keyword, string $url): bool
+    public function updatePermalink(string $keyword, string $url, string $title = null): bool
     {
-        $data = [
-            'url' => $url,
-            'shorturl' => $keyword,
-            'format'   => 'json',
-            'action'   => 'update'
-        ];
+        /** @var UpdateShorturlRequest $request */
+        $request = $this->createRequest(UpdateShorturlRequest::class);
 
-        $response = $this->postCurl($data);
+        $request
+            ->setKeyword($keyword)
+            ->setUrl($url)
+        ;
+
+        if ($title) {
+            $request->setTitle($title);
+        }
+        
+        $response = $this->post($request);
 
         if (isset($response->statusCode) && $response->statusCode == 200) {
             return true;
@@ -90,6 +96,7 @@ class YourlsApiManager
             $request->__toArray()
         );
 
+        var_dump($curl->response);
         if ($curl->response) {
             return $curl->response;
         }
