@@ -7,6 +7,8 @@ use Caldera\YourlsApiManager\Request\DeleteShorturlRequest;
 use Caldera\YourlsApiManager\Request\ExpandShorturlRequest;
 use Caldera\YourlsApiManager\Request\RequestInterface;
 use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
+use Caldera\YourlsApiManager\Response\CreateShorturlResponse;
+use Caldera\YourlsApiManager\Response\ResponseInterface;
 use Curl\Curl;
 
 class YourlsApiManager
@@ -37,15 +39,10 @@ class YourlsApiManager
             ->setTitle($title)
         ;
 
+        /** @var CreateShorturlResponse $response */
         $response = $this->post($request);
 
-        if (!isset($response->shorturl)) {
-            return null;
-        }
-
-        $permalink = $response->shorturl;
-
-        return $permalink;
+        return $response->getShorturl();
     }
 
     public function getUrl(string $keyword): ?string
@@ -105,7 +102,7 @@ class YourlsApiManager
         return false;
     }
 
-    protected function post(RequestInterface $request): \stdClass
+    protected function post(RequestInterface $request): ResponseInterface
     {
         $curl = new Curl();
         $curl->post(
@@ -113,16 +110,20 @@ class YourlsApiManager
             $request->__toArray()
         );
 
-        var_dump($curl->response);
-        if ($curl->response) {
-            return $curl->response;
-        }
-
-        return null;
+        return $this->createResponse($curl->response, get_class($request));
     }
 
     protected function createRequest(string $requestClassname): RequestInterface
     {
         return new $requestClassname($this->apiUsername, $this->apiPassword);
+    }
+
+    protected function createResponse(\stdClass $responseData, string $requestClassname): ResponseInterface
+    {
+        $responseClassname = str_replace('Request', 'Response', $requestClassname);
+
+        $response = new $responseClassname($responseData);
+
+        return $response;
     }
 }
