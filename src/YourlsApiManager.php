@@ -3,6 +3,7 @@
 namespace Caldera\YourlsApiManager;
 
 use Caldera\YourlsApiManager\Request\CreateShorturlRequest;
+use Caldera\YourlsApiManager\Request\DeleteShorturlRequest;
 use Caldera\YourlsApiManager\Request\ExpandShorturlRequest;
 use Caldera\YourlsApiManager\Request\RequestInterface;
 use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
@@ -63,14 +64,22 @@ class YourlsApiManager
         $longUrl = $response->longurl;
 
         return $longUrl;
+    }
+
+    public function deleteUrl(string $keyword): ?string
+    {
+        /** @var DeleteShorturlRequest $request */
+        $request = $this->createRequest(DeleteShorturlRequest::class);
+
+        $request->setKeyword($keyword);
+
+        $response = $this->post($request);
 
         if (isset($response->errorCode) && $response->errorCode == 404) {
             return null;
         }
 
-        $longUrl = $response->longurl;
-
-        return $longUrl;
+        return $response->errorCode;
     }
 
     public function updatePermalink(string $keyword, string $url, string $title = null): bool
@@ -86,7 +95,7 @@ class YourlsApiManager
         if ($title) {
             $request->setTitle($title);
         }
-        
+
         $response = $this->post($request);
 
         if (isset($response->statusCode) && $response->statusCode == 200) {
