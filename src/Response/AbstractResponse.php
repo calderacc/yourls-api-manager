@@ -13,10 +13,10 @@ class AbstractResponse implements ResponseInterface
 
     public function isSuccess(): bool
     {
-        return $this->getStatus() === 'success';
+        return $this->getStatusCode() === 200;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->responseData['status'];
     }
