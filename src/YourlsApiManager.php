@@ -8,6 +8,7 @@ use Caldera\YourlsApiManager\Request\ExpandShorturlRequest;
 use Caldera\YourlsApiManager\Request\RequestInterface;
 use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
 use Caldera\YourlsApiManager\Response\CreateShorturlResponse;
+use Caldera\YourlsApiManager\Response\ExpandShorturlResponse;
 use Caldera\YourlsApiManager\Response\ResponseInterface;
 use Caldera\YourlsApiManager\Response\UpdateShorturlResponse;
 use Curl\Curl;
@@ -53,15 +54,10 @@ class YourlsApiManager
 
         $request->setKeyword($keyword);
 
+        /** @var ExpandShorturlResponse $response */
         $response = $this->post($request);
 
-        if (isset($response->errorCode) && $response->errorCode == 404) {
-            return null;
-        }
-
-        $longUrl = $response->longurl;
-
-        return $longUrl;
+        return $response->getLongurl();
     }
 
     public function deleteUrl(string $keyword): ?string
