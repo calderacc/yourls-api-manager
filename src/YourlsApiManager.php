@@ -2,28 +2,22 @@
 
 namespace Caldera\YourlsApiManager;
 
-use Caldera\YourlsApiManager\Request\CreateShorturlRequest;
-use Caldera\YourlsApiManager\Request\DeleteShorturlRequest;
-use Caldera\YourlsApiManager\Request\ExpandShorturlRequest;
-use Caldera\YourlsApiManager\Request\UpdateShorturlRequest;
-use Caldera\YourlsApiManager\Response\CreateShorturlResponse;
-use Caldera\YourlsApiManager\Response\DeleteShorturlResponse;
-use Caldera\YourlsApiManager\Response\ExpandShorturlResponse;
-use Caldera\YourlsApiManager\Response\UpdateShorturlResponse;
+use Caldera\YourlsApiManager\Request as Request;
+use Caldera\YourlsApiManager\Response as Response;
 
 class YourlsApiManager extends AbstractYourlsApiManager
 {
     public function createShorturl(string $url, string $title): ?string
     {
-        /** @var CreateShorturlRequest $request */
-        $request = $this->createRequest(CreateShorturlRequest::class);
+        /** @var Request\CreateShorturlRequest $request */
+        $request = $this->createRequest(Request\CreateShorturlRequest::class);
 
         $request
             ->setUrl($url)
             ->setTitle($title)
         ;
 
-        /** @var CreateShorturlResponse $response */
+        /** @var Response\CreateShorturlResponse $response */
         $response = $this->postRequest($request);
 
         return $response->getKeyword();
@@ -31,12 +25,12 @@ class YourlsApiManager extends AbstractYourlsApiManager
 
     public function getShorturl(string $keyword): ?string
     {
-        /** @var ExpandShorturlRequest $request */
-        $request = $this->createRequest(ExpandShorturlRequest::class);
+        /** @var Request\ExpandShorturlRequest $request */
+        $request = $this->createRequest(Request\ExpandShorturlRequest::class);
 
         $request->setKeyword($keyword);
 
-        /** @var ExpandShorturlResponse $response */
+        /** @var Response\ExpandShorturlResponse $response */
         $response = $this->postRequest($request);
 
         return $response->getLongurl();
@@ -44,12 +38,12 @@ class YourlsApiManager extends AbstractYourlsApiManager
 
     public function deleteShorturl(string $keyword): bool
     {
-        /** @var DeleteShorturlRequest $request */
-        $request = $this->createRequest(DeleteShorturlRequest::class);
+        /** @var Request\DeleteShorturlRequest $request */
+        $request = $this->createRequest(Request\DeleteShorturlRequest::class);
 
         $request->setKeyword($keyword);
 
-        /** @var DeleteShorturlResponse $response */
+        /** @var Response\DeleteShorturlResponse $response */
         $response = $this->postRequest($request);
 
         return $response->isSuccess();
@@ -57,8 +51,8 @@ class YourlsApiManager extends AbstractYourlsApiManager
 
     public function updateShorturl(string $keyword, string $url, string $title = null): bool
     {
-        /** @var UpdateShorturlRequest $request */
-        $request = $this->createRequest(UpdateShorturlRequest::class);
+        /** @var Request\UpdateShorturlRequest $request */
+        $request = $this->createRequest(Request\UpdateShorturlRequest::class);
 
         $request
             ->setKeyword($keyword)
@@ -69,7 +63,7 @@ class YourlsApiManager extends AbstractYourlsApiManager
             $request->setTitle($title);
         }
 
-        /** @var UpdateShorturlResponse $response */
+        /** @var Response\UpdateShorturlResponse $response */
         $response = $this->postRequest($request);
 
         return $response->isSuccess();

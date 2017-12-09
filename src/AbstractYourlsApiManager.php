@@ -34,7 +34,7 @@ abstract class AbstractYourlsApiManager
 
         return $this->createResponse($curl->response, get_class($request));
     }
-    
+
     protected function createRequest(string $requestClassname): RequestInterface
     {
         return new $requestClassname($this->apiUsername, $this->apiPassword);
