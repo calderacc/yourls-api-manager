@@ -43,7 +43,7 @@ class YourlsApiManager
         ;
 
         /** @var CreateShorturlResponse $response */
-        $response = $this->post($request);
+        $response = $this->postRequest($request);
 
         return $response->getKeyword();
     }
@@ -56,7 +56,7 @@ class YourlsApiManager
         $request->setKeyword($keyword);
 
         /** @var ExpandShorturlResponse $response */
-        $response = $this->post($request);
+        $response = $this->postRequest($request);
 
         return $response->getLongurl();
     }
@@ -69,7 +69,7 @@ class YourlsApiManager
         $request->setKeyword($keyword);
 
         /** @var DeleteShorturlResponse $response */
-        $response = $this->post($request);
+        $response = $this->postRequest($request);
 
         return $response->isSuccess();
     }
@@ -89,19 +89,19 @@ class YourlsApiManager
         }
 
         /** @var UpdateShorturlResponse $response */
-        $response = $this->post($request);
+        $response = $this->postRequest($request);
 
         return $response->isSuccess();
     }
 
-    protected function post(RequestInterface $request): ResponseInterface
+    protected function postRequest(RequestInterface $request): ResponseInterface
     {
         $curl = new Curl();
         $curl->post(
             $this->apiUrl,
             $request->__toArray()
         );
-        
+
         return $this->createResponse($curl->response, get_class($request));
     }
 
