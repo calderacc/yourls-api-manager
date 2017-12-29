@@ -20,7 +20,7 @@ class YourlsApiManager extends AbstractYourlsApiManager
         /** @var Response\CreateShorturlResponse $response */
         $response = $this->postRequest($request);
 
-        return $response->getKeyword();
+        return $response->getShorturl();
     }
 
     public function getShorturl(string $keyword): ?string
