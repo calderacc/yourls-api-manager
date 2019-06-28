@@ -2,11 +2,20 @@
 
 namespace Caldera\YourlsApiManager;
 
+use Caldera\YourlsApiManager\Http\Http;
 use Caldera\YourlsApiManager\Request as Request;
 use Caldera\YourlsApiManager\Response as Response;
 
 class YourlsApiManager extends AbstractYourlsApiManager
 {
+    /** @var Http $http */
+    protected $http;
+
+    public function __construct(Http $http)
+    {
+        $this->http = $http;
+    }
+
     public function createShorturl(string $url, string $title): ?string
     {
         /** @var Request\CreateShorturlRequest $request */
