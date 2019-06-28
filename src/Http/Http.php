@@ -30,6 +30,13 @@ class Http
         $this->curl = new Curl();
     }
 
+    public function setCurl(Curl $curl): Http
+    {
+        $this->curl = $curl;
+
+        return $this;
+    }
+
     protected function credentials(): array
     {
         return [
