@@ -4,9 +4,8 @@ namespace Caldera\YourlsApiManager;
 
 use Caldera\YourlsApiManager\Http\Http;
 use Caldera\YourlsApiManager\Request as Request;
-use Caldera\YourlsApiManager\Response as Response;
 
-class YourlsApiManager extends AbstractYourlsApiManager
+class YourlsApiManager
 {
     /** @var Http $http */
     protected $http;
@@ -18,62 +17,52 @@ class YourlsApiManager extends AbstractYourlsApiManager
 
     public function createShorturl(string $url, string $title): ?string
     {
-        /** @var Request\CreateShorturlRequest $request */
-        $request = $this->createRequest(Request\CreateShorturlRequest::class);
+        $request = new Request\CreateShorturlRequest();
 
         $request
             ->setUrl($url)
-            ->setTitle($title)
-        ;
+            ->setTitle($title);
 
-        /** @var Response\CreateShorturlResponse $response */
-        $response = $this->postRequest($request);
+        $response = $this->http->post($request);
 
         return $response->getShorturl();
     }
 
     public function getShorturl(string $keyword): ?string
     {
-        /** @var Request\ExpandShorturlRequest $request */
-        $request = $this->createRequest(Request\ExpandShorturlRequest::class);
+        $request = new Request\ExpandShorturlRequest();
 
         $request->setKeyword($keyword);
 
-        /** @var Response\ExpandShorturlResponse $response */
-        $response = $this->postRequest($request);
+        $response = $this->http->postRequest($request);
 
         return $response->getLongurl();
     }
 
     public function deleteShorturl(string $keyword): bool
     {
-        /** @var Request\DeleteShorturlRequest $request */
-        $request = $this->createRequest(Request\DeleteShorturlRequest::class);
+        $request = new Request\DeleteShorturlRequest();
 
         $request->setKeyword($keyword);
 
-        /** @var Response\DeleteShorturlResponse $response */
-        $response = $this->postRequest($request);
+        $response = $this->http->post($request);
 
         return $response->isSuccess();
     }
 
     public function updateShorturl(string $keyword, string $url, string $title = null): bool
     {
-        /** @var Request\UpdateShorturlRequest $request */
-        $request = $this->createRequest(Request\UpdateShorturlRequest::class);
+        $request = new Request\UpdateShorturlRequest();
 
         $request
             ->setKeyword($keyword)
-            ->setUrl($url)
-        ;
+            ->setUrl($url);
 
         if ($title) {
             $request->setTitle($title);
         }
 
-        /** @var Response\UpdateShorturlResponse $response */
-        $response = $this->postRequest($request);
+        $response = $this->http->post($request);
 
         return $response->isSuccess();
     }

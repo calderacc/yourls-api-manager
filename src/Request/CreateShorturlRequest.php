@@ -4,10 +4,8 @@ namespace Caldera\YourlsApiManager\Request;
 
 class CreateShorturlRequest extends AbstractRequest
 {
-    public function __construct(string $username, string $password)
+    public function __construct()
     {
-        parent::__construct($username, $password);
-
         $this->requestData = array_merge($this->requestData, [
             'action' => 'shorturl',
             'format'  => 'json',
