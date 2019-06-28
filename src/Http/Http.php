@@ -2,6 +2,7 @@
 
 namespace Caldera\YourlsApiManager\Http;
 
+use Caldera\YourlsApiManager\Factory\RequestDataFactory;
 use Caldera\YourlsApiManager\Factory\ResponseFactory;
 use Caldera\YourlsApiManager\Request\RequestInterface;
 use Caldera\YourlsApiManager\Response\ResponseInterface;
@@ -37,7 +38,7 @@ class Http
         return $this;
     }
 
-    protected function credentials(): array
+    public function credentials(): array
     {
         return [
             'username' => $this->apiUsername,
@@ -47,13 +48,9 @@ class Http
 
     public function post(RequestInterface $request): ResponseInterface
     {
-        $requestData = $request->__toArray();
-
-        $requestData = array_merge($requestData, $this->credentials());
-
         $curlResponse = $this->curl->post(
             $this->apiUrl,
-            $requestData,
+            RequestDataFactory::createRequestData($request, $this)
         );
 
         $response = ResponseFactory::createResponse($curlResponse, get_class($request));
