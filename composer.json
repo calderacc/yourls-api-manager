@@ -10,7 +10,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Caldera\\YourlsApiManager\\": "src/"
+            "Caldera\\YourlsApiManager\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "require": {
