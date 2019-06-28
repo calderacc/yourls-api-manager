@@ -36,4 +36,41 @@ class RequestDataFactoryTest extends TestCase
             'format' => 'json',
         ], RequestDataFactory::createRequestData(new UpdateShorturlRequest(), $http));
     }
+
+    public function testRequestDataWithCredentials(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http
+            ->expects($this->exactly(4))
+            ->method('credentials')
+            ->will($this->returnValue(['username' => 'foo', 'password' => 'baz']));
+
+        $this->assertEquals([
+            'action' => 'shorturl',
+            'format' => 'json',
+            'username' => 'foo',
+            'password' => 'baz',
+        ], RequestDataFactory::createRequestData(new CreateShorturlRequest(), $http));
+
+        $this->assertEquals([
+            'action' => 'delete',
+            'format' => 'json',
+            'username' => 'foo',
+            'password' => 'baz',
+        ], RequestDataFactory::createRequestData(new DeleteShorturlRequest(), $http));
+
+        $this->assertEquals([
+            'action' => 'expand',
+            'format' => 'json',
+            'username' => 'foo',
+            'password' => 'baz',
+        ], RequestDataFactory::createRequestData(new ExpandShorturlRequest(), $http));
+
+        $this->assertEquals([
+            'action' => 'update',
+            'format' => 'json',
+            'username' => 'foo',
+            'password' => 'baz',
+        ], RequestDataFactory::createRequestData(new UpdateShorturlRequest(), $http));
+    }
 }
