@@ -4,7 +4,6 @@ namespace Tests\YourlsApiManager;
 
 use Caldera\YourlsApiManager\Http\Http;
 use Caldera\YourlsApiManager\Request\CreateShorturlRequest;
-use Caldera\YourlsApiManager\Response\CreateShorturlResponse;
 use Caldera\YourlsApiManager\YourlsApiManager;
 use Curl\Curl;
 use PHPUnit\Framework\TestCase;
@@ -13,20 +12,23 @@ class YourlsApiManagerTest extends TestCase
 {
     public function testCreateShorturl(): void
     {
-        $createShorturlRequest = new CreateShorturlRequest();
         $curlResponse = new \stdClass();
         $curlResponse->shorturl = 'foobarbaz';
 
         $expectedRequestData = [
             'username' => 'testusername',
             'password' => 'testpassword',
+            'action' => 'shorturl',
+            'format' => 'json',
+            'url' => 'https://criticalmass.one/',
+            'title' => 'Critical Mass One',
         ];
 
         $curl = $this->createMock(Curl::class);
         $curl
             ->expects($this->once())
             ->method('post')
-            ->withConsecutive($this->equalTo('testurl'), $this->equalTo($expectedRequestData))
+            ->with($this->equalTo('testurl'), $this->equalTo($expectedRequestData), false)
             ->will($this->returnValue($curlResponse));
 
         $http = new Http('testurl', 'testusername', 'testpassword');
