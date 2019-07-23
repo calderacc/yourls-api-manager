@@ -3,7 +3,6 @@
 namespace Caldera\YourlsApiManager;
 
 use Caldera\YourlsApiManager\Http\Http;
-use Caldera\YourlsApiManager\Request as Request;
 
 class YourlsApiManager
 {
