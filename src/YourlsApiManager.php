@@ -33,7 +33,7 @@ class YourlsApiManager
 
         $request->setKeyword($keyword);
 
-        $response = $this->http->postRequest($request);
+        $response = $this->http->post($request);
 
         return $response->getLongurl();
     }
